@@ -3,7 +3,7 @@
 
 local user_table = {
 	["linus"]={["name"]="LINUS",["ratio"]=1,["tclog"]={},["nclog"]={},["switchlog"]={}},
-	["rose"]={["name"]="ROSE",["ratio"]=0.9,["tclog"]={},["nclog"]={},["switchlog"]={}},
+	["rose"]={["name"]="ROSE",["ratio"]=0.96,["tclog"]={},["nclog"]={},["switchlog"]={}},
 	["austin"]={["name"]="AUSTIN",["ratio"]=10.8,["tclog"]={},["nclog"]={},["switchlog"]={}},
 	["yfan"]={["name"]="YFAN",["ratio"]=1,["tclog"]={},["nclog"]={},["switchlog"]={}},
 	}
