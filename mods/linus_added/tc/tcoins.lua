@@ -2,10 +2,10 @@
 --License: WTFPL
 
 local user_table = {
-	["linus"]={["name"]="LINUS",["ratio"]=1,["tclog"]={},["nclog"]={},["switchlog"]={}},
-	["rose"]={["name"]="ROSE",["ratio"]=0.96,["tclog"]={},["nclog"]={},["switchlog"]={}},
-	["austin"]={["name"]="AUSTIN",["ratio"]=10.8,["tclog"]={},["nclog"]={},["switchlog"]={}},
-	["yfan"]={["name"]="YFAN",["ratio"]=1,["tclog"]={},["nclog"]={},["switchlog"]={}},
+	["linus"]={["name"]="LINUS",["ratio"]=1,["coin"]="",["tclog"]={},["nclog"]={},["switchlog"]={}},
+	["rose"]={["name"]="ROSE",["ratio"]=0.96,["coin"]="ibu",["tclog"]={},["nclog"]={},["switchlog"]={}},
+	["austin"]={["name"]="AUSTIN",["ratio"]=10.8,["coin"]="picachu",["tclog"]={},["nclog"]={},["switchlog"]={}},
+	["yfan"]={["name"]="YFAN",["ratio"]=1,["coin"]="",["tclog"]={},["nclog"]={},["switchlog"]={}},
 	}
 local all_path = {
 	["log"]="/home/linus/log/",
@@ -19,7 +19,6 @@ local all_point = {
 	}
 
 local tmp_table = {},tmp_msg
-
 
 --read all param ,seprated by " "
 function read_params(p)
@@ -36,7 +35,6 @@ function read_params(p)
 end
 
 function get_name(playname)
-
 	if playname == nil then return " " end
 
 		for i, v in pairs(user_table) do 
@@ -46,7 +44,6 @@ function get_name(playname)
 end
 
 function get_ratio(playname)
-
 	if playname == nil then return " " end
 	
 		for i, v in pairs(user_table) do 
@@ -56,10 +53,7 @@ function get_ratio(playname)
 end
 
 function bank_check(bank_path,mode)
-
 	--count the current TC of reciver
-	--bank_path = all_path["tc"]..get_name(name)
-	
 	local all_result
 	local input = io.open(bank_path, "r")
 	
@@ -217,12 +211,7 @@ minetest.register_chatcommand("net", {
 	switch_path = file_path..get_name(name)
 	add_name = get_name(name)
 	
- 	local input = io.open(all_path["nc"]..add_name, "r")
-	if input ~= nil then 
-		nettime = input:read("*all")
-		io.close(input)
-		else nettime = "0"
- 	end
+ 	local nettime = bank_check(all_path["nc"]..add_name) --count the current NC
 	
 	--compare the param
 	if p1 == nil or p1 == "" then
@@ -267,11 +256,6 @@ minetest.register_chatcommand("net", {
 			minetest.chat_send_player(name, "Hi, PLAYER "..name.." ,NETTIME SWITCH WILL AUTO-ON after "..p2.." minutes")
 
 		elseif p1 == "save" then
-			--count the current NC
-			local input = io.open(all_path["nc"]..add_name, "r")
-			if input ~= nil then 
-				nettime = tonumber(input:read("*all"))
-				io.close(input)
 				inv:add_item("main","tc:nc_coin "..nettime)
 				os.execute("echo 0 >"..all_path["nc"]..add_name)
 				minetest.chat_send_player(name, "COLLECT NC_COIN AMOUNT : "..nettime)
@@ -315,11 +299,10 @@ minetest.register_chatcommand("net", {
 					else
 					minetest.chat_send_player(name, "=====HAVE NO RECORDS of "..name.."=====")
 				end
-		
-
 			
 		else
 			minetest.chat_send_player(name, "WRONG PARAM : "..param.." , "..usage_desc)
+
 	end
 	
  end,
@@ -327,7 +310,7 @@ minetest.register_chatcommand("net", {
 
 minetest.register_chatcommand("tc", {
 
-	params = "Usage:/tc {save/list/<NAME> <AMOUNT>}. save:collect tc to TCOINs, list:show your records of account, <NAME><AMOUNT>:give NAME AMOUNT tcoins from bank",
+	params = "Usage:/tc {save <COIN TYPE>/list/<NAME> <AMOUNT>}. save:collect tc to TCOINs,<COIN TYPE> is up to your coin-name; list:show your records of account; <NAME><AMOUNT>:give NAME AMOUNT tcoins from bank",
 	description = "setup,show tcoins status or save time to coins",
 	privs = {},
 
@@ -336,11 +319,10 @@ minetest.register_chatcommand("tc", {
     local player = minetest.get_player_by_name(name)
    	local check_flag = "FALSE"
    	local add_name = ""
-	local nettime
 	local check_time = os.date("%x %H:%M")
 	local inv=player:get_inventory()
 	local tc_from,tc_to,tc_record_table={}
-	local usage_desc = "Usage:/tc {save/list/<NAME> <AMOUNT>}. save:collect tc in bank to TCOINs, list:show your records of account, <NAME><AMOUNT>:give NAME AMOUNT tcoins from bank"
+	local usage_desc = "Usage:/tc {save <COIN TYPE>/list/<NAME> <AMOUNT>}. save:collect tc to TCOINs,<COIN TYPE> is up to your coin-name,optional; list:show your records of account; <NAME><AMOUNT>:give NAME AMOUNT tcoins from bank"
 	
     tmp_table = read_params(param)
     
@@ -350,33 +332,51 @@ minetest.register_chatcommand("tc", {
 	--compare the param
 	if p1 == nil or p1 == "" then
 
-		local input = io.open(all_path["tc"]..get_name(name), "r")
-			if input ~= nil then 
-				nettime = input:read("*all")
-				io.close(input)
-				else nettime = "0"
-			end
+		local nettime = bank_check(all_path["tc"]..get_name(name))
  
-			minetest.chat_send_player(name, "CURRENT TCoin AMOUNT of "..name.." in bank: "..nettime)
-			minetest.chat_send_player(name, "EXCHANGE RATIO of "..name.." is: "..get_ratio(name))
-			minetest.chat_send_player(name, usage_desc)
+		minetest.chat_send_player(name, "CURRENT TCoin AMOUNT of "..name.." in bank: "..nettime)
+		minetest.chat_send_player(name, "EXCHANGE RATIO of "..name.." is: "..get_ratio(name))
+		minetest.chat_send_player(name, usage_desc)
 
 		return
 		
 		elseif p1 == "save" then
-			--count the current TC
+			--count the current TC in bank
 			local input = io.open(all_path["tc"]..get_name(name), "r")
-			
+	
 			if input ~= nil then 
-				nettime = input:read("*all")
+				nettime = tonumber(input:read("*all"))
 				io.close(input)
-				local abs_v = math.floor(tonumber(nettime))
-				local after_count = (nettime*10-abs_v*10)/10
-				inv:add_item("main","tc:tcoin "..abs_v) --transfer tc from bank to TCOIN in hand.
-				os.execute("echo "..(tonumber(nettime)-abs_v).." >"..all_path["tc"]..get_name(name)) --TCOIN in bank
-				minetest.chat_send_player(name, "TCOIN in bank : "..after_count)
-				tmp_msg = check_time.." "..get_name(name).." save "..abs_v.." TCoins in hand and has totally : "..after_count.." tc in bank"
-				table.insert(user_table[name].tclog,tmp_msg)
+			
+				if p2 == nil or p2 == "" then --collect currency in bank to default TCoins.
+					local abs_v = math.floor(nettime)
+					local after_count = nettime-abs_v
+					local coin_stack = "tc:tcoin "..abs_v
+					
+					if (inv:room_for_item("main", coin_stack)) then
+						inv:add_item("main",coin_stack) --transfer tc from bank to TCOIN in hand.
+						os.execute("echo "..after_count.." >"..all_path["tc"]..get_name(name)) --TCOIN in bank
+						minetest.chat_send_player(name, "TCOIN in bank : "..after_count)
+						tmp_msg = check_time.." "..get_name(name).." save "..abs_v.." TCoins in hand and has totally : "..after_count.." tc in bank"
+						table.insert(user_table[name].tclog,tmp_msg)
+						else 
+						minetest.chat_send_player(name, "You Inventory has no free space")
+					end
+				elseif p2 == user_table[name].coin then --collect currency in bank to children's TCoins.
+					local abs_v = math.floor(nettime/tonumber(user_table[name].ratio))
+					local after_count = nettime-(abs_v*user_table[name].ratio)
+					local coin_stack = "tc:"..user_table[name].coin.."_coin "..abs_v
+
+					if (inv:room_for_item("main", coin_stack)) then
+						inv:add_item("main",coin_stack) --transfer tc from bank to TCOIN in hand.
+						os.execute("echo "..after_count.." >"..all_path["tc"]..get_name(name)) --TCOIN in bank
+						minetest.chat_send_player(name, "TCOIN in bank : "..after_count)
+						tmp_msg = check_time.." "..get_name(name).." save "..abs_v.." "..user_table[name].coin.." Coins in hand and has totally : "..after_count.." tc in bank"
+						table.insert(user_table[name].tclog,tmp_msg)
+						else 
+						minetest.chat_send_player(name, "You Inventory has no free space")
+					end
+				end
 			end
 			
 		elseif p1 == "list" then
