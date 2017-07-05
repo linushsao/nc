@@ -244,6 +244,7 @@ minetest.register_chatcommand("net", {
 			minetest.chat_send_player(name, "CURRENT NETTIME SWITCH : ON")
 			tmp_msg = check_time.." "..add_name.." SWITCH ON"
 			table.insert(user_table[name].switchlog,tmp_msg)
+			os.execute("echo "..tmp_msg.." >> "..all_path.log.."switch.log")	
 			return
 			
 		elseif p1 == "off" then
@@ -251,6 +252,7 @@ minetest.register_chatcommand("net", {
 			minetest.chat_send_player(name, "CURRENT NETTIME SWITCH : OFF")
 			tmp_msg = check_time.." "..add_name.." SWITCH OFF"
 			table.insert(user_table[name].switchlog,tmp_msg)
+			os.execute("echo "..tmp_msg.." >> "..all_path.log.."switch.log")	
 			
 		elseif p1 == "auto-off" and p2 ~= nil and tonumber(p2) > 0 then
 			os.execute("echo rm "..switch_path.." > "..all_path.tmp.."tmp"..name..".sh")	
@@ -258,6 +260,7 @@ minetest.register_chatcommand("net", {
 			tmp_msg = check_time.." auto-off after "..math.floor(p2).." minutes"
 			table.insert(user_table[name].switchlog,tmp_msg)
 			minetest.chat_send_player(name, "Hi, PLAYER "..name.." ,NETTIME SWITCH WILL AUTO-OFF after "..p2.." minutes")
+			os.execute("echo "..tmp_msg.." >> "..all_path.log.."switch.log")	
 			
 		elseif p1 == "auto-on" and p2 ~= nil and tonumber(p2) > 0 then
 			os.execute("echo touch "..switch_path.." > "..all_path.tmp.."tmp"..name..".sh")	
@@ -265,6 +268,7 @@ minetest.register_chatcommand("net", {
 			tmp_msg = check_time.." auto-on after "..math.floor(p2).." minutes"
 			table.insert(user_table[name].switchlog,tmp_msg)
 			minetest.chat_send_player(name, "Hi, PLAYER "..name.." ,NETTIME SWITCH WILL AUTO-ON after "..p2.." minutes")
+			os.execute("echo "..tmp_msg.." >> "..all_path.log.."switch.log")	
 
 		elseif p1 == "save" then
 			--count the current NC
