@@ -144,7 +144,7 @@ function add_nccoin(node, desc, inv_image, amount)
     stack_max = 30000,
 
     on_use = function(itemstack, user, pointed_thing)
-
+--[[
    	local cmd_path = all_path.script.."nat-add-nc.sh"
   	local nettime = ""
     local name = user:get_player_name()
@@ -161,7 +161,7 @@ function add_nccoin(node, desc, inv_image, amount)
 		itemstack:take_item()
 		return itemstack
 
-	end,
+	end,--]]
 	})
 
 end
