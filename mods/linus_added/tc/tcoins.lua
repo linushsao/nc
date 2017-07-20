@@ -144,24 +144,26 @@ function add_nccoin(node, desc, inv_image, amount)
     stack_max = 30000,
 
     on_use = function(itemstack, user, pointed_thing)
---[[
+
    	local cmd_path = all_path.script.."nat-add-nc.sh"
   	local nettime = ""
     local name = user:get_player_name()
     local add_time = amount
  	local check_time = os.date("%x %H:%M")
-   
-		os.execute(cmd_path.." "..get_name(name).." "..add_time)
-		print("GG:"..cmd_path.." "..get_name(name).." "..add_time)
-		tmp_msg = check_time.." "..get_name(name).." save "..add_time.." nc in bank ,and has totally : "..bank_check(all_path.nc..get_name(name)).." nc in bank "
-		table.insert(user_table[name].nclog,tmp_msg)
-		print(dump(user_table[name].nclog))
+		if os.date("%w") == 6 or os.date("%w") == 0 then 
+			os.execute(cmd_path.." "..get_name(name).." "..add_time)
+			print("GG:"..cmd_path.." "..get_name(name).." "..add_time)
+			tmp_msg = check_time.." "..get_name(name).." save "..add_time.." nc in bank ,and has totally : "..bank_check(all_path.nc..get_name(name)).." nc in bank "
+			table.insert(user_table[name].nclog,tmp_msg)
+			print(dump(user_table[name].nclog))
+			-- Takes one item from the stack
+			itemstack:take_item()
+			return itemstack
+		else
+			minetest.chat_send_player(user, "NCoin could be used Only at Saturday or Sunday")
+		end
 
-		-- Takes one item from the stack
-		itemstack:take_item()
-		return itemstack
-
-	end,--]]
+	end,
 	})
 
 end
