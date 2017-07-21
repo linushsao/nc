@@ -160,7 +160,7 @@ function add_nccoin(node, desc, inv_image, amount)
 			itemstack:take_item()
 			return itemstack
 		else
-			minetest.chat_send_player(user, "NCoin could be used Only at Saturday or Sunday")
+			minetest.chat_send_player(name, "NCoin could be used Only at Saturday or Sunday")
 		end
 
 	end,
