@@ -150,7 +150,7 @@ function add_nccoin(node, desc, inv_image, amount)
     local name = user:get_player_name()
     local add_time = amount
  	local check_time = os.date("%x %H:%M")
-		if os.date("%w") == 6 or os.date("%w") == 0 then 
+		if os.date("%w") == "6" or os.date("%w") == "0" then 
 			os.execute(cmd_path.." "..get_name(name).." "..add_time)
 			print("GG:"..cmd_path.." "..get_name(name).." "..add_time)
 			tmp_msg = check_time.." "..get_name(name).." save "..add_time.." nc in bank ,and has totally : "..bank_check(all_path.nc..get_name(name)).." nc in bank "
