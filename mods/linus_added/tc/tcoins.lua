@@ -1,10 +1,12 @@
 --tcoins by linushsao@gmail.com
 --License: WTFPL
+--austin 11.3535 
+--rose 0.99
 
 local user_table = {
 	["linus"]={["name"]="LINUS",["ratio"]=1,["tclog"]={},["nclog"]={},["switchlog"]={}},
-	["rose"]={["name"]="ROSE",["ratio"]=0.96,["tclog"]={},["nclog"]={},["switchlog"]={}},
-	["austin"]={["name"]="AUSTIN",["ratio"]=10.8,["tclog"]={},["nclog"]={},["switchlog"]={}},
+	["rose"]={["name"]="ROSE",["ratio"]=0.99,["tclog"]={},["nclog"]={},["switchlog"]={}},
+	["austin"]={["name"]="AUSTIN",["ratio"]=11.35,["tclog"]={},["nclog"]={},["switchlog"]={}},
 	["yfan"]={["name"]="YFAN",["ratio"]=1,["tclog"]={},["nclog"]={},["switchlog"]={}},
 	}
 local all_path = {
